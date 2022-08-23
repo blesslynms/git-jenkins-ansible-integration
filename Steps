@@ -1,0 +1,61 @@
+Install Jenkins: Keep it up and running
+
+Install on jenkins:
+1. Git
+2. Maven
+3. Java
+4. Ansible
+5. Tree
+
+Install Plugin:
+1. Default git
+2. Maven Intergration
+3. Ansible 
+
+Global Tool configuration : give the path 
+
+Maven Webapp Archetype:
+
+Create a mven web project using : mvn archetype:generate -DgroupId=com.sample.webproject -DartifactId=SampleWebApp -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false
+
+SampleWebApp/
+├── pom.xml
+└── src
+    └── main
+        ├── resources
+        └── webapp
+            ├── index.jsp
+            └── WEB-INF
+                └── web.xml
+
+
+Create a git repo: Pushed the newly generated code
+
+pipeline {
+    agent any 
+	tools {
+		maven 'Maven home'
+	}
+    stages {
+        stage('SCM-Checkout') { 
+            steps {
+                git branch: 'main', credentialsId: 'git-credentials', url: 'https://github.com/vikas99341/git-jenkins-ansible-integration.git' 
+            }
+        }
+        stage('Clean-compile') { 
+            steps {
+                sh "mvn clean compile"
+            }
+        }
+        stage('Package') { 
+            steps {
+                sh "mvn package" 
+            }
+        }
+        stage('Ansible-Deployment') { 
+            steps {
+                echo "Running Ansible-Deployment" 
+            }
+        }
+    }
+}
